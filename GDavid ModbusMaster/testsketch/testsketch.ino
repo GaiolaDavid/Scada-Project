@@ -1,19 +1,11 @@
-char incomingByte = 0;
+#include <SoftwareSerial.h>
 void setup() {
+  SoftwareSerial serial485(rxPin, txPin, inverse_logic)
   
-  Serial.begin(57600);
 
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-        // read the incoming byte:
-        incomingByte = Serial.read();
-
-        // say what you got:
-        Serial.print("I received: ");
-        Serial.println(incomingByte, DEC);
-        Serial.println(incomingByte);
-      }
+  
 
 }
