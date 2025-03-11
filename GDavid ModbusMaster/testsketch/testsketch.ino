@@ -1,7 +1,15 @@
 #include <SoftwareSerial.h>
+#define rxPin 11
+#define txPin 10
+#define inverse_logic false
+
 void setup() {
-  SoftwareSerial serial485(rxPin, txPin, inverse_logic)
+  pinMode(rxPin, INPUT);
+  pinMode(txPin, OUTPUT);
+  SoftwareSerial serial485(rxPin, txPin, inverse_logic);
+  serial485.begin(115200);
   
+
 
 }
 
