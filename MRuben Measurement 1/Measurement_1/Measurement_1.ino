@@ -24,20 +24,32 @@ void loop() {
   }
 
   int rawFuelLevel = analogRead(FUEL_SENSOR_PIN);
-  float fuelLevelPercent = (rawFuelLevel / 1023.0) * 100.0;
+  float fuelLevelPercent = (rawFuelLevel / 1023.0) * 100.0 ;
 
-  // Kiírás a soros monitorra
-  Serial.print("Páratartalom: ");
-  Serial.print(humidity);
-  Serial.print("\t");
+  int tempInt = (int)temperature;
+  int tempDec = (int)(temperature * 10) % 100;
 
-  Serial.print("Hőmérséklet: ");
-  Serial.print(temperature);
-  Serial.println("°C");
+  int humInt = (int)humidity;
+  int humDec = (int)(humidity * 10) % 100;
 
-  Serial.print("Üzemanyagszint: ");
-  Serial.print(fuelLevelPercent);
-  Serial.println(" %");
+  int fuelInt = (int)fuelLevelPercent;
+  int fuelDec = (int)(fuelLevelPercent * 10) % 10;
+
+  String tempString = String(tempInt) +" "+ String(tempDec);
+  String humString = String(humInt) +" "+ String(humDec);
+  String fuelString = String(fuelInt) +" "+ String(fuelDec);
+
+   Serial.print("Páratartalom: ");
+    Serial.print(humString);
+    Serial.print(" %\t");
+
+    Serial.print("Hőmérséklet: ");
+    Serial.print(tempString);
+    Serial.print(" °C\t");
+
+    Serial.print("Üzemanyagszint: ");
+    Serial.print(fuelString);
+    Serial.println(" %");
 
   delay(2000); // 2 másodpercenként frissítjük az adatokat
 }
