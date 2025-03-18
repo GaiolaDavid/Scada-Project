@@ -4,7 +4,7 @@
 #define enPin 13
 #define inverse_logic false
 int counter = 0;
-bool rw = 0;
+bool rw = 1;
 SoftwareSerial serial485 = SoftwareSerial(rxPin, txPin, inverse_logic);
 char data[30]="";
 
@@ -19,9 +19,14 @@ void setup() {
 
 }
 
-void writer(int e, int f,int data) {
+void writer(int e, int f,char* data) {
   digitalWrite(enPin,HIGH);
-  serial485.write(":RUbEnaBA\n\r");
+  char temp[30] =":";
+  strcat(temp,(char)e);
+  strcat(temp,(char)f);
+  strcat(temp,data);
+  strcat(temp,"\n\r");
+  serial485.write(temp);
   digitalWrite(enPin,LOW);
 }
 
