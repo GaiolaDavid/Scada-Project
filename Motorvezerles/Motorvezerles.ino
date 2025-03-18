@@ -1,4 +1,4 @@
-// Motor vezérlő pinek
+// Motor vezérlő pine
 #define IN1 8
 #define IN2 9
 #define IN3 10
