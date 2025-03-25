@@ -9,7 +9,7 @@ DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   pinMode(FUEL_SENSOR_PIN, INPUT);
-  Serial.begin(9600);
+  Serial.begin(57600);
   Serial.println("DHT11 hőmérséklet,páratartalom és üzemanyag mérés indítása...");
   dht.begin();
 }
@@ -35,21 +35,66 @@ void loop() {
   int fuelInt = (int)fuelLevelPercent;
   int fuelDec = (int)(fuelLevelPercent * 10) % 10;
 
-  String tempString = String(tempInt) +" "+ String(tempDec);
-  String humString = String(humInt) +" "+ String(humDec);
-  String fuelString = String(fuelInt) +" "+ String(fuelDec);
+  String tempString = String(tempInt) +"."+ String(tempDec);
+  String humString = String(humInt) +"."+ String(humDec);
+  String fuelString = String(fuelInt) +"."+ String(fuelDec);
 
-   Serial.print("Páratartalom: ");
-    Serial.print(humString);
-    Serial.print(" %\t");
+  char tempchararray[30];
+  strcpy(tempchararray,tempString.c_str());
+  Serial.println("TempCharArrayTest");
+  Serial.println(tempchararray);
 
-    Serial.print("Hőmérséklet: ");
-    Serial.print(tempString);
-    Serial.print(" °C\t");
+  char humiditychararray[30];
+  strcpy(humiditychararray,humString.c_str());
+  Serial.println("HumidityCharArrayTest");
+  Serial.println(humiditychararray);
 
-    Serial.print("Üzemanyagszint: ");
-    Serial.print(fuelString);
-    Serial.println(" %");
+  char fuelchararray[30];
+  strcpy(fuelchararray,fuelString.c_str());
+  Serial.println("FuelCharArrayTest");
+  Serial.println(fuelchararray);
+
+void writer(int e, int f,int data) {
+  digitalWrite(enPin,HIGH);
+  serial485.write(":TESTSTRING\n\r");
+  digitalWrite(enPin,LOW);
+}
+
+void reader(char* ptr) {
+  Serial.println("Reading");
+  digitalWrite(enPin,LOW);
+  bool flag,flag1,flag2=false;
+  char string[30]="";
+  bool read=false;
+  while(!read) {
+    if(serial485.available()) {
+        int curreadi=serial485.read();
+        char curread=(char)curreadi;
+        if(flag) {
+          strncat(string,&curread,1);
+          if(curreadi==10) {
+            flag1=true;
+          }
+          if(flag1 && curreadi == 13) {
+            flag1=false;
+            flag=false;
+            flag2=true;
+          }
+        }
+        if(curreadi==58) {
+          flag=true;
+          strcpy(string,"");
+          Serial.println(string);
+        }
+      }
+      if(flag2) {
+        flag2=false;
+        read=true;
+      }
+    }
+  strcpy(ptr,string);
+}
+   
 
   delay(2000); // 2 másodpercenként frissítjük az adatokat
 }
