@@ -8,24 +8,17 @@ bool rw = 1;
 SoftwareSerial serial485 = SoftwareSerial(rxPin, txPin, inverse_logic);
 char data[30]="";
 
-void setup() {
-  pinMode(enPin, OUTPUT);
-  pinMode(rxPin, INPUT);
-  pinMode(txPin, OUTPUT);
-  serial485.begin(9600);
-  Serial.begin(57600);
-  Serial.println("Test");
-  digitalWrite(enPin,LOW);
-
-}
-
 void writer(int e, int f,char* datain) {
   digitalWrite(enPin,HIGH);
   char temp[30] =":";
-  strcat(temp,(char)e);
-  strcat(temp,(char)f);
+  char tempc[1]="";
+  sprintf(tempc,"%i",e);
+  strcat(temp,tempc);
+  sprintf(tempc,"%i",f);
+  strcat(temp,tempc);
   strcat(temp,datain);
   strcat(temp,"\n\r");
+  Serial.println(temp);
   serial485.write(temp);
   digitalWrite(enPin,LOW);
 }
@@ -64,6 +57,19 @@ void reader(char* ptr) {
     }
   strcpy(ptr,string);
 }
+
+void setup() {
+  pinMode(enPin, OUTPUT);
+  pinMode(rxPin, INPUT);
+  pinMode(txPin, OUTPUT);
+  serial485.begin(9600);
+  Serial.begin(57600);
+  Serial.println("Test");
+  digitalWrite(enPin,LOW);
+  writer(1,0,"");
+}
+
+
 
 void loop() {
   if(rw) {
