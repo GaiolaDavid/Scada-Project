@@ -47,7 +47,7 @@ void reader(char* ptr) {
         if(curreadi==58) {
           flag=true;
           strcpy(string,"");
-          Serial.println(string);
+          //Serial.println(string);
         }
       }
       if(flag2) {
@@ -67,20 +67,13 @@ void setup() {
   Serial.println("Test");
   digitalWrite(enPin,LOW);
   writer(1,0,"");
+  reader(data);
+  Serial.println(data);
 }
 
 
 
 void loop() {
-  if(rw) {
-    writer(0,0,0);
-    rw=0;
-  } else {
-    reader(data);
-    Serial.println("Readin over");
-    rw=1;
-    Serial.print("Out of function string:");
-    Serial.println(data);
-  }
+  
 
 }
