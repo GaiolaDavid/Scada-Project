@@ -17,7 +17,8 @@ RtcDS1302<ThreeWire> Rtc(myWire);
 #define enPin 13
 #define inverse_logic false
 int counter = 0;
-bool rw = 1;
+int cycle=0;
+bool rw = 0;
 SoftwareSerial serial485 = SoftwareSerial(rxPin, txPin, inverse_logic);
 char data485[30]="";
 
@@ -29,10 +30,14 @@ const char data[] = "what time is it";
 void writer(int e, int f,char* datain) {
   digitalWrite(enPin,HIGH);
   char temp[30] =":";
-  strcat(temp,(char)e);
-  strcat(temp,(char)f);
+  char tempc[1]="";
+  sprintf(tempc,"%i",e);
+  strcat(temp,tempc);
+  sprintf(tempc,"%i",f);
+  strcat(temp,tempc);
   strcat(temp,datain);
   strcat(temp,"\n\r");
+  //Serial.println(temp);
   serial485.write(temp);
   digitalWrite(enPin,LOW);
 }
@@ -129,6 +134,7 @@ void setup ()
 
 void loop () 
 {
+  {
     RtcDateTime now = Rtc.GetDateTime();
 
     printDateTime(now);
@@ -166,7 +172,21 @@ void loop ()
         Serial.print((char)buff[ch]);
     }
     Serial.println("\"");
-    
+  }
+    switch(cycle) {
+      case 1:
+      writer(1,0,"");
+      reader(data485);
+      Serial.println(data485);
+      break;
+      default:
+      break;
+    }
+
+
+
+
+
     delay(5000);
 }
 
