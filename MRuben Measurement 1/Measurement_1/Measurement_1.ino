@@ -147,7 +147,16 @@ void loop() {
           sprintf(arraytosend,"%s",humiditychararray);
           Serial.println(humiditychararray);
         }
-        writer(5,funcreturn,tempchararray);
+
+        if(temp=='2') {
+          Serial.println("Requested Fuel");
+          funcreturn=1;
+          sprintf(arraytosend,"%s",fuelchararray);
+          Serial.println(fuelchararray);
+        }
+
+        Serial.println(arraytosend);
+        writer(5,funcreturn,arraytosend);
         Serial.println("Message Sent");
       }
     } else {
