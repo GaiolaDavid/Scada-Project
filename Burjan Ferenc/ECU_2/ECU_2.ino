@@ -22,9 +22,8 @@ void setup() {
 }
 
 void loop() {
-  getDistance();
-  sendDataAndPrint();
-  delay(500);
+  listenForMaster();
+  delay(100);
 }
 
 void getDistance() {
@@ -50,17 +49,38 @@ void readEncoder() {
   lastStateA = currentStateA;
 }
 
-void sendDataAndPrint() {
+void listenForMaster() {
+  if (Serial.available()) {
+    String receivedData = Serial.readStringUntil('\n');
+    if (receivedData.startsWith(":2")) {  // Ellenőrizzük, hogy nekünk szól-e
+      char functionCode = receivedData.charAt(2);
+      if (functionCode == '0') {
+        sendEncoderData();
+      } else if (functionCode == '1') {
+        sendDistanceData();
+      }
+    }
+  }
+}
+
+void sendEncoderData() {
   bool negative = (position < 0);
   long absPosition = abs(position);
+  String response = ":50";
+  response += negative ? "1" : "0";
+  response += String(absPosition / 100).charAt(0);
+  response += String((absPosition / 10) % 10);
+  response += String(absPosition % 10);
+  response += "FRLF";
+  Serial.println(response);
+}
 
-  String dataString = String(negative) +
-                      String(absPosition / 100).charAt(0) +
-                      String((absPosition / 10) % 10) +
-                      String(absPosition % 10) +
-                      String((distance / 100) % 10) +
-                      String((distance / 10) % 10) +
-                      String(distance % 10);
-
-  Serial.println(dataString);
+void sendDistanceData() {
+  getDistance();
+  String response = ":51";
+  response += String((distance / 100) % 10);
+  response += String((distance / 10) % 10);
+  response += String(distance % 10);
+  response += "FRLF";
+  Serial.println(response);
 }
