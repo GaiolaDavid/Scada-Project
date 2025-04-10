@@ -17,7 +17,7 @@ RtcDS1302<ThreeWire> Rtc(myWire);
 #define enPin 13
 #define inverse_logic false
 int counter = 0;
-int cycle=0;
+int cycle=3;
 bool rw = 0;
 SoftwareSerial serial485 = SoftwareSerial(rxPin, txPin, inverse_logic);
 char data485[30]="";
@@ -179,6 +179,13 @@ void loop ()
       reader(data485);
       Serial.println(data485);
       break;
+      case 3:
+      writer(1,0,"30");
+      reader(data485);
+      Serial.println(data485);
+      delay(500);
+      writer(1,1,"");
+      reader(data485);
       default:
       break;
     }
