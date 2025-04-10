@@ -183,7 +183,8 @@ void loop ()
       break;
     }
 
-
+    RtcDateTime now = Rtc.GetDateTime();
+    printDateTime(now);
 
 
 
