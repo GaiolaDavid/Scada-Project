@@ -71,9 +71,6 @@ void setup() {
   Serial.println(data);
 }
 
-
-
 void loop() {
   
-
 }

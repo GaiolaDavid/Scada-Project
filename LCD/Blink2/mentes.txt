@@ -150,7 +150,7 @@ void processSerialInput(){
   }
 } // proba volt amig nem a modbus uzenetet kaptam
 
-void printLCD_master_mod(int ecuNr){ //ecuNr -> melyik ECU küldi az adatot
+void printLCD_master_mod(int ecuNr){
   
   lcd.setCursor(0, 0);//lcd.setCursor(oszlop,sor)
     if (ecuNr == 1) {  // Ha az "1" gombot nyomják => hőmérséklet, nedvesség, üzemanyag szint
@@ -265,22 +265,21 @@ void printLCD_lokal_mod(char key){ //paraméterbe kapom az 1,2,3 gombot
     }
 }
 
-void receiveData() { // soros monitorrol kapom az adatokat
+void receiveData() {
   if (Serial.available()) {
     String received = Serial.readStringUntil('\n');  // Üzenet beolvasása a soros monitorrol a sor végéig
 
-    if (received[1] == '4'){
-        // Formátum ellenőrzése (pl. :41XX)
-      if (received.length() >= 6 && received[0] == ':' &&  (received[2] == '0' || received[2] == '1') && ((received[3] == '1') || (received[3] == '2') || (received[3] == '3'))  ) {
+    // Formátum ellenőrzése (pl. :41XX)
+    if (received.length() >= 6 && received[0] == ':' && received[1] == '4' && (received[2] == '0' || received[2] == '1') && ((received[3] == '1') || (received[3] == '2') || (received[3] == '3'))  ) {
 
       int ecuNr_int = received[3] - '0';  // Karaktert számmá alakít
       int func_nr = received[2] - '0';
 
       if (func_nr == 0){ //itt ha func_nr=0 kiíratni a képernyőre
         lcd.clear();
-        printLCD_master_mod(ecuNr_int);  //a kapott paraméterek alapján kiír az LCD-re (amikor 0 ás funkció jön akkor a 3. byteba meg kellene kapjam, hogy melyik ECU küldi az adatot)
+        printLCD_master_mod(ecuNr_int);  //a kapott paraméterek alapján kiír az LCD-re
         //Serial.println(ecuNr_int);
-      } else { // itt a func_nr=1, tehát adatokat kell frissítsek (24 bytba megkapom az összes adatot)
+      } else { // itt ha a func_nr=1 akkor adatokat frissíteni (24 bytba megkapom az összes adatot)
         data_update(received);
       }
       
@@ -294,8 +293,6 @@ void receiveData() { // soros monitorrol kapom az adatokat
       lcd.print("Hibas formatum");
       Serial.println(":500FFFCRLF"); // Sikertelen adatfeldolgozás visszajelzése
     }
-    }
-    
   }
 }
 
@@ -338,7 +335,7 @@ void data_update(String received){
   b = received[4] - '0';
   c = received[5] - '0';
   d = received[6] - '0';
-  temp = a * 10 + b + (c * 0.1) + (d * 0.01); //új hőmérséklet 
+  temp = a * 10 + b + (c * 0.1) + (d * 0.01);
 
   a=0;b=0;c=0;d=0;
   a = received[7] - '0';
