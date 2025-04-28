@@ -21,11 +21,11 @@ const int RECV_PIN = 2;  // Az IR szenzor DATA lábát a 2-es pinre kötöttük
 
 LiquidCrystal_I2C lcd(0x27,16,2);  // set the LCD address to 0x27 for a 16 chars and 2 line display 
 
+void IR_req_handler(int);
 void processSerialInput(); //serial monitor kezelő
 void printLCD_master_mod(int);
 void printLCD_lokal_mod(char);
 void receiveData();
-void IR_req_handler(int);
 void data_update(String);
 
 const byte ROWS = 4; // 4 sor
@@ -271,7 +271,7 @@ void receiveData() { // soros monitorrol kapom az adatokat
 
     if (received[1] == '4'){
         // Formátum ellenőrzése (pl. :41XX)
-      if (received.length() >= 6 && received[0] == ':' &&  (received[2] == '0' || received[2] == '1') && ((received[3] == '1') || (received[3] == '2') || (received[3] == '3'))  ) {
+      if (received.length() >= 6 && received[0] == ':' &&  (received[2] == '0' || received[2] == '1') ) {
 
       int ecuNr_int = received[3] - '0';  // Karaktert számmá alakít
       int func_nr = received[2] - '0';
