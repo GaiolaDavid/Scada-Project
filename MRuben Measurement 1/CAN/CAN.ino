@@ -18,7 +18,6 @@ void getData(can_frame *message, float *num1, float *num2) {
     memcpy(num2, message->data + sizeof(float), sizeof(float));
 }
 
-
 MCP2515 mcp2515(53);
 
 void setup() {
@@ -39,12 +38,18 @@ void loop() {
 
   if (mcp2515.readMessage(&canMsg) == MCP2515::ERROR_OK) {
     getData(&canMsg, &recovered1, &recovered2);
-    dtostrf(recovered1, 4, 2, numChar);
-    snprintf(buffer, sizeof(buffer), "recovered1: %s\n", numChar);
-    Serial.print(buffer);
-    dtostrf(recovered2, 4, 2, numChar);
-    snprintf(buffer, sizeof(buffer), "recovered2: %s\n", numChar);
-    Serial.print(buffer);
+    switch(canMsg.can_id) {
+      case 3: {
+        dtostrf(recovered1, 4, 2, numChar);
+        snprintf(buffer, sizeof(buffer), "recovered1: %s\n", numChar);
+        Serial.print(buffer);
+        dtostrf(recovered2, 4, 2, numChar);
+        snprintf(buffer, sizeof(buffer), "recovered2: %s\n", numChar);
+        Serial.print(buffer);
+        break;
+      }
+    }
+    
   }
 
 }
